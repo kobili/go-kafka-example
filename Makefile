@@ -22,9 +22,6 @@ destroy:
 	docker compose down -v --rmi local
 
 # Examples of running kafka binaries that exist inside the container
-kafka-create-topic:
-	docker compose exec kafka ./opt/kafka/bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
-
 kafka-describe-topic:
 	docker compose exec kafka ./opt/kafka/bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
 
