@@ -20,3 +20,16 @@ md: migrate-down
 destroy:
 	docker compose stop
 	docker compose down -v --rmi local
+
+# Examples of running kafka binaries that exist inside the container
+kafka-create-topic:
+	docker compose exec kafka ./opt/kafka/bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+
+kafka-describe-topic:
+	docker compose exec kafka ./opt/kafka/bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
+
+kafka-console-producer:
+	docker compose exec kafka ./opt/kafka/bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
+
+kafka-console-consumer:
+	docker compose exec kafka ./opt/kafka/bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092

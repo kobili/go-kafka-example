@@ -2,6 +2,7 @@
 server/tmp/
 pgData/
 mongoData/
+kafkaLogs/
 
 **/node_modules
 dist
