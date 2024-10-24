@@ -9,12 +9,16 @@ import (
 
 	"server/db"
 	"server/handlers"
+	kaf "server/kafka_client"
 )
 
 func main() {
 
 	db := db.ConnectToDB()
 	defer db.Close()
+
+	kafkaProducer := kaf.ConnectProducer()
+	defer kafkaProducer.Close()
 
 	router := chi.NewRouter()
 
