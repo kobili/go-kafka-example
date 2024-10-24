@@ -1,5 +1,5 @@
 build:
-	docker build -t go-rest -f ./docker/dev/Dockerfile ./server
+	docker compose build
 
 run:
 	docker compose up
