@@ -9,12 +9,12 @@ import (
 )
 
 type UserEntity struct {
-	UserId    string
-	Email     string
-	FirstName string
-	LastName  string
-	Age       int32
-	Aliases   []string
+	UserId    string   `json:"userId"`
+	Email     string   `json:"email"`
+	FirstName string   `json:"firstName"`
+	LastName  string   `json:"lastName"`
+	Age       int32    `json:"Age"`
+	Aliases   []string `json:"aliases"`
 }
 
 func GetUsers(db *sql.DB, ctx context.Context) ([]UserEntity, error) {

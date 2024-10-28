@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -17,8 +18,11 @@ func main() {
 	db := db.ConnectToDB()
 	defer db.Close()
 
-	kafkaProducer := kaf.ConnectProducer()
-	defer kafkaProducer.Close()
+	kafkaClient, err := kaf.NewProducer()
+	if err != nil {
+		log.Fatalf("Failed to connect to kafka: %v", err)
+	}
+	defer kafkaClient.Close()
 
 	router := chi.NewRouter()
 
@@ -29,7 +33,7 @@ func main() {
 	router.Route("/api", func(r chi.Router) {
 		r.Get("/users", handlers.ListUsersHandler(db))
 		r.Get("/users/{userId}", handlers.RetrieveUserHandler(db))
-		r.Post("/users", handlers.CreateUserHandler(db))
+		r.Post("/users", handlers.CreateUserHandler(db, kafkaClient))
 		r.Patch("/users/{userId}", handlers.UpdateUserHandler(db))
 		r.Delete("/users/{userId}", handlers.DeleteUserHandler(db))
 	})
@@ -43,7 +47,7 @@ func main() {
 
 	fmt.Printf("Starting server on localhost:%s\n", serverPort)
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err == http.ErrServerClosed {
 		fmt.Println("Server shutting down")
 	}

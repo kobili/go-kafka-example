@@ -1,17 +1,19 @@
 package kafka_client
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"fmt"
 	"log"
+
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-func ConnectProducer() *kafka.Producer {
+func connectProducer() (*kafka.Producer, error) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "kafka"})
 	if err != nil {
-		log.Fatalf("Failed to create Kafka producer: %v", err)
+		return nil, fmt.Errorf("failed to create Kafka producer: %v", err)
 	}
 
 	log.Println("Created Kafka producer")
 
-	return p
+	return p, nil
 }

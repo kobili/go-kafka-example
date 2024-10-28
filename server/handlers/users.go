@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"server/db"
+	kaf "server/kafka_client"
 )
 
 type ReducedUserDetail struct {
@@ -91,7 +92,7 @@ func RetrieveUserHandler(sqlDB *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(fn)
 }
 
-func CreateUserHandler(sqlDB *sql.DB) http.HandlerFunc {
+func CreateUserHandler(sqlDB *sql.DB, kafkaClient *kaf.KafkaClient) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, req *http.Request) {
 		var reqBody db.UpdateUserPayload
 		err := json.NewDecoder(req.Body).Decode(&reqBody)
@@ -103,6 +104,19 @@ func CreateUserHandler(sqlDB *sql.DB) http.HandlerFunc {
 		userEntity, err := db.CreateUser(sqlDB, req.Context(), reqBody)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("CreateUserHandler - DB error: %v", err), 500)
+			return
+		}
+
+		// send user created event to kafka
+		kafkaMessage, err := json.Marshal(userEntity)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to marshal kafka message: %v", err), 500)
+			return
+		}
+
+		err = kafkaClient.SendMessage(kaf.KAFKA_TOPIC_USER_CREATED, kafkaMessage)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to send `user-created` message to kafka: %v", err), 500)
 			return
 		}
 
