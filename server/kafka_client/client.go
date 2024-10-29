@@ -10,7 +10,7 @@ type KafkaClient struct {
 	Producer *kafka.Producer
 }
 
-func NewProducer() (*KafkaClient, error) {
+func NewClient() (*KafkaClient, error) {
 	producer, err := connectProducer()
 	if err != nil {
 		return nil, err

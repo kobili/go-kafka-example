@@ -18,7 +18,7 @@ func main() {
 	db := db.ConnectToDB()
 	defer db.Close()
 
-	kafkaClient, err := kaf.NewProducer()
+	kafkaClient, err := kaf.NewClient()
 	if err != nil {
 		log.Fatalf("Failed to connect to kafka: %v", err)
 	}
