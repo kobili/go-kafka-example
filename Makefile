@@ -24,7 +24,7 @@ destroy:
 # Examples of running kafka binaries that exist inside the container
 topic ?= 
 kafka-describe-topic:
-	docker compose exec kafka ./opt/kafka/bin/kafka-topics.sh --describe --topic ${topic} --bootstrap-server localhost:9092
+	docker compose exec kafka ./opt/kafka/bin/kafka-topics.sh --describe --topic ${topic} --bootstrap-server kafka:9092
 
 kafka-console-consumer:
-	docker compose exec kafka ./opt/kafka/bin/kafka-console-consumer.sh --topic ${topic} --from-beginning --bootstrap-server localhost:9092
+	docker compose exec kafka ./opt/kafka/bin/kafka-console-consumer.sh --topic ${topic} --from-beginning --bootstrap-server kafka:9092
